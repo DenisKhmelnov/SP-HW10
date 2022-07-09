@@ -34,6 +34,11 @@ def get_by_pk(pk):
             return "".join(["<pre>", formate_candidate(candidate), "</pre>"])
     return "Нет кандидата с таким PK"
 
-# `get_by_skill(skill_name)`, которая вернет кандидатов по навыку
+@app.route("/skills/<skill_name>/")
+def get_by_skill(skill_name):
+    skilled_candidates = [formate_candidate(candidate) for candidate in candidates if skill_name.lower() in candidate["skills"].lower()]
+    skilled_candidates = "\n\n".join(skilled_candidates)
+    return "".join(["<pre>", skilled_candidates, "</pre>"])
+
 
 app.run()
