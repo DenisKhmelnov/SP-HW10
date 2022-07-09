@@ -1,27 +1,7 @@
 from flask import Flask
-import json
+from utils import load_candidates, formate_candidate
 
 app = Flask(__name__)
-
-
-def load_candidates():
-    """
-    :return: Возвращает список со всеми кандидатами из файла JSON
-    """
-    with open("candidates.json") as file:
-        candidates_list = json.load(file)
-        return candidates_list
-
-
-def formate_candidate(candidate):
-    """
-    :param candidate:
-    :return: Возвращает форматированную строку с заданным кандидатом
-    """
-    return f"""Имя кандидата - {candidate["name"]}
-Позиция кандидата - {candidate["position"]}
-Навыки кандидата: {candidate["skills"]}"""
-
 
 # Создаем список кандидатов
 candidates = load_candidates()
@@ -41,12 +21,13 @@ def get_all():
 def get_by_pk(pk):
     """
     :param pk: pk, который задает пользователь
-    :return: Вовращает сандидата по его pk
+    :return: Возвращает кандидата по его pk
     """
     for candidate in candidates:
         if candidate["pk"] == pk:
             return "".join(["<pre>", formate_candidate(candidate), "</pre>"])
     return "Нет кандидата с таким PK"
+
 
 @app.route("/skills/<skill_name>/")
 def get_by_skill(skill_name):
@@ -54,7 +35,8 @@ def get_by_skill(skill_name):
     :param skill_name: Навык, который задаёт пользователь
     :return: Возвращает всех кандидатов у которых есть нужный навык
     """
-    skilled_candidates = [formate_candidate(candidate) for candidate in candidates if skill_name.lower() in candidate["skills"].lower()]
+    skilled_candidates = [formate_candidate(candidate) for candidate in candidates if
+                          skill_name.lower() in candidate["skills"].lower()]
     skilled_candidates = "\n\n".join(skilled_candidates)
     return "".join(["<pre>", skilled_candidates, "</pre>"])
 
