@@ -25,7 +25,8 @@ def get_by_pk(pk):
     """
     for candidate in candidates:
         if candidate["pk"] == pk:
-            return "".join(["<pre>", formate_candidate(candidate), "</pre>"])
+            picture_url = candidate["picture"]
+            return "".join([f"<img src='{picture_url}'>", "<pre>", formate_candidate(candidate), "</pre>"])
     return "Нет кандидата с таким PK"
 
 
